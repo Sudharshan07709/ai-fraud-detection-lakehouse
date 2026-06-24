@@ -8,6 +8,10 @@ services:
       POSTGRES_USER: fraud_user
       POSTGRES_PASSWORD: fraud_password
       POSTGRES_DB: fraud_db
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
     ports:
       - "5432:5432"
     volumes:
@@ -90,8 +94,8 @@ services:
       tail -f /opt/spark/logs/spark--org.apache.spark.deploy.master*.out
       "
     ports:
-      - "8080:8080"   # Spark Master Web UI
-      - "7077:7077"   # Spark Master Communication Port
+      - "8080:8080"   
+      - "7077:7077"   
     volumes:
       - ./app:/opt/spark-app
       - ./data:/opt/spark-data
@@ -110,7 +114,7 @@ services:
       tail -f /opt/spark/logs/spark--org.apache.spark.deploy.worker*.out
       "
     ports:
-      - "8081:8081"   # Spark Worker Web UI
+      - "8081:8081"   
     volumes:
       - ./app:/opt/spark-app
       - ./data:/opt/spark-data
