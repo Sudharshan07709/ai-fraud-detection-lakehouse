@@ -85,17 +85,20 @@ services:
       - fraud_network
 
   spark-master:
-    image: apache/spark:3.5.1
-    container_name: fraud_spark_master
-    hostname: fraud_spark_master
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
+    image: fraud-spark:3.5.1
+    container_name: fraud-spark-master
+    hostname: spark-master
     command: >
       bash -c "
       /opt/spark/sbin/start-master.sh &&
       tail -f /opt/spark/logs/spark--org.apache.spark.deploy.master*.out
       "
     ports:
-      - "8080:8080"   
-      - "7077:7077"   
+      - "8080:8080"
+      - "7077:7077"
     volumes:
       - ./app:/opt/spark-app
       - ./data:/opt/spark-data
@@ -103,18 +106,18 @@ services:
       - fraud_network
 
   spark-worker:
-    image: apache/spark:3.5.1
-    container_name: fraud_spark_worker
-    hostname: fraud_spark_worker
+    image: fraud-spark:3.5.1
+    container_name: fraud-spark-worker
+    hostname: spark-worker
     depends_on:
       - spark-master
     command: >
       bash -c "
-      /opt/spark/sbin/start-worker.sh spark://fraud_spark_master:7077 --cores 2 --memory 2g &&
+      /opt/spark/sbin/start-worker.sh spark://spark-master:7077 --cores 2 --memory 2g &&
       tail -f /opt/spark/logs/spark--org.apache.spark.deploy.worker*.out
       "
     ports:
-      - "8081:8081"   
+      - "8081:8081"
     volumes:
       - ./app:/opt/spark-app
       - ./data:/opt/spark-data
