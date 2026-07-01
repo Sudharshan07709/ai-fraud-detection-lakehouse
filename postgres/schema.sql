@@ -47,6 +47,9 @@ FOR VALUES FROM ('2026-05-01') TO ('2026-06-01');
 CREATE TABLE transactions_2026_06 PARTITION OF transactions
 FOR VALUES FROM ('2026-06-01') TO ('2026-07-01');
 
+CREATE TABLE transactions_2026_07 PARTITION OF transactions
+FOR VALUES FROM ('2026-07-01') TO ('2026-08-01');
+
 CREATE INDEX idx_transactions_customer_id
 ON transactions(customer_id);
 
